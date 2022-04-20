@@ -1,0 +1,8 @@
+version: '3.9'
+
+services:
+  core:
+    build:
+      target: debug
+    ports:
+      - 5678:5678

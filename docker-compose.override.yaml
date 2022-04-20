@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  user:
+    ports:
+      - 5000:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: $DATABASE_URL
+    volumes:
+      - ./user:/app
+  postgres:
+    image: postgres:13.2-alpine
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+        - 5432:5432
+    environment:
+        POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

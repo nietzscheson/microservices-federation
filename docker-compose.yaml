@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  user:
+    container_name: user
+    build:
+      context: ./user
+      dockerfile: ./Dockerfile
+      args:
+        - NAME=${NAME}
