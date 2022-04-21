@@ -1,0 +1,39 @@
+schema {
+	query: Query
+    mutation: Mutation
+}
+
+type Product {
+    id: ID!
+    name: String!
+    price: Float!
+    quantity: Int!
+}
+
+type ProductPayload {
+    success: Boolean!
+    errors: [String]
+    product: Product
+}
+
+type ProductsPayload {
+    success: Boolean!
+    errors: [String]
+    products: [Product]
+}
+
+type Query {
+    products: ProductsPayload!
+    product(id: ID!): ProductPayload!
+}
+
+type ProductDeletePayload{
+    success: Boolean!
+    errors: [String]
+}
+
+type Mutation {
+    productCreate(name: String!, price: Float!, quantity: Int!): ProductPayload!
+    productUpdate(id: ID!, name: String!, price: Float!, quantity: Int!): ProductPayload!
+    productDelete(id: ID!): ProductDeletePayload
+}

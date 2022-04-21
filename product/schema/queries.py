@@ -1,17 +1,17 @@
 
-from models import db, User
+from models import db, Product
 
 
-def resolve_users(_, info):
+def resolve_products(_, info):
     try:
-        users = [user.to_json() for user in User.all()]
+        products = [product.to_json() for product in Product.all()]
 
-        if not users:
-            raise Exception("No users")
+        if not products:
+            raise Exception("No products")
 
         payload = {
             "success": True,
-            "users": users
+            "products": products
         }
     except Exception as error:
         payload = {
@@ -20,15 +20,15 @@ def resolve_users(_, info):
         }
     return payload
 
-def resolve_user(_, info, id):
+def resolve_product(_, info, id):
     try:
-        user = User.get(id)
+        product = Product.get(id)
 
-        if not user:
-            raise Exception("The user %s doesn't exists" % id)
+        if not product:
+            raise Exception("The product %s doesn't exists" % id)
         payload = {
             "success": True,
-            "user": user
+            "product": product
         }
     except Exception as error:
         payload = {

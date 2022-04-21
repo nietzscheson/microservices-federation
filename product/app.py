@@ -3,26 +3,23 @@ from flask import Flask, escape, request, jsonify
 from models import db
 from flask_migrate import Migrate
 
-from ariadne import graphql_sync, load_schema_from_path, snake_case_fallback_resolvers, ObjectType
+from ariadne import graphql_sync, make_executable_schema, load_schema_from_path, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
-from ariadne.contrib.federation import FederatedObjectType, make_federated_schema
-from schema.queries import resolve_users, resolve_user
-from schema.mutations import resolve_user_create, resolve_user_update, resolve_user_delete
+from schema.queries import resolve_products, resolve_product
+from schema.mutations import resolve_product_create, resolve_product_update, resolve_product_delete
 
 query = ObjectType("Query")
-query.set_field("users", resolve_users)
-query.set_field("user", resolve_user)
-user = FederatedObjectType("User")
-user.reference_resolver(resolve_user)
+query.set_field("products", resolve_products)
+query.set_field("product", resolve_product)
 
 mutation = ObjectType("Mutation")
-mutation.set_field("userCreate", resolve_user_create)
-mutation.set_field("userUpdate", resolve_user_update)
-mutation.set_field("userDelete", resolve_user_delete)
+mutation.set_field("productCreate", resolve_product_create)
+mutation.set_field("productUpdate", resolve_product_update)
+mutation.set_field("productDelete", resolve_product_delete)
 
 type_defs = load_schema_from_path("schema/schema.graphql")
 
-schema = make_federated_schema(type_defs, [query, user], mutation, snake_case_fallback_resolvers)
+schema = make_executable_schema(type_defs, query, mutation, snake_case_fallback_resolvers)
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
