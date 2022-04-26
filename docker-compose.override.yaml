@@ -10,7 +10,9 @@ services:
     environment:
       DATABASE_URL: $DATABASE_URL_USER
     volumes:
-      - ./user:/user
+      - type: bind
+        source: ./user
+        target: /user
 
   product:
     ports:
@@ -21,7 +23,9 @@ services:
     environment:
       DATABASE_URL: $DATABASE_URL_PRODUCT
     volumes:
-      - ./product:/product
+      - type: bind
+        source: ./product
+        target: /product
   postgres:
     image: postgres:13.2-alpine
     build: ./postgres
@@ -37,3 +41,4 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+

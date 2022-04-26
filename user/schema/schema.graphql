@@ -3,8 +3,8 @@ schema {
     mutation: Mutation
 }
 
-type User {
-    id: ID!
+type User @key(fields: "id") {
+    id: Int!
     name: String!
 }
 

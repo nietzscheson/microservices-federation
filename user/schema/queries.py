@@ -1,6 +1,9 @@
 
 from models import db, User
 
+def resolve_hello(_, info):
+    return "Hello!"
+
 
 def resolve_users(_, info):
     try:

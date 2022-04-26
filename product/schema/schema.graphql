@@ -3,6 +3,10 @@ schema {
     mutation: Mutation
 }
 
+type User @key(fields: "id") @extends {
+    id: Int! @external
+}
+
 type Product {
     id: ID!
     name: String!

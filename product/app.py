@@ -5,12 +5,17 @@ from flask_migrate import Migrate
 
 from ariadne import graphql_sync, make_executable_schema, load_schema_from_path, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
+from ariadne.contrib.federation import FederatedObjectType, make_federated_schema
 from schema.queries import resolve_products, resolve_product
 from schema.mutations import resolve_product_create, resolve_product_update, resolve_product_delete
 
 query = ObjectType("Query")
 query.set_field("products", resolve_products)
 query.set_field("product", resolve_product)
+product = FederatedObjectType("Product")
+product.reference_resolver(resolve_product)
+
+user = FederatedObjectType("User")
 
 mutation = ObjectType("Mutation")
 mutation.set_field("productCreate", resolve_product_create)
@@ -19,7 +24,7 @@ mutation.set_field("productDelete", resolve_product_delete)
 
 type_defs = load_schema_from_path("schema/schema.graphql")
 
-schema = make_executable_schema(type_defs, query, mutation, snake_case_fallback_resolvers)
+schema = make_federated_schema(type_defs, [query, product, user], mutation, snake_case_fallback_resolvers)
 
 app = Flask(__name__)
 app.config.from_object("config.Config")
