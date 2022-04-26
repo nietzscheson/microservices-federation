@@ -5,7 +5,12 @@ from ariadne import convert_kwargs_to_snake_case
 @convert_kwargs_to_snake_case
 def resolve_product_create(_, info, **kwargs):
     try:
-        product = Product(name=kwargs["name"], price=kwargs["price"], quantity=kwargs["quantity"])
+        product = Product(
+            name=kwargs["name"],
+            price=kwargs["price"],
+            quantity=kwargs["quantity"],
+            created_by=kwargs["created_by"]
+        )
         product.save()
 
         payload = {

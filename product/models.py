@@ -7,6 +7,7 @@ class Product(db.Model):
     name = db.Column(db.String(128))
     price = db.Column(db.FLOAT(precision=10, decimal_return_scale=None))
     quantity = db.Column(db.Integer)
+    created_by = db.Column(db.Integer)
 
     def to_json(self):
         return {
@@ -14,6 +15,7 @@ class Product(db.Model):
             "name": self.name,
             "price": self.price,
             "quantity": self.quantity,
+            "created_by": self.created_by,
         }
 
     def save(self):

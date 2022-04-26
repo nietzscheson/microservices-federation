@@ -8,10 +8,11 @@ type User @key(fields: "id") @extends {
 }
 
 type Product {
-    id: ID!
+    id: Int!
     name: String!
     price: Float!
     quantity: Int!
+    createdBy: User
 }
 
 type ProductPayload {
@@ -28,7 +29,7 @@ type ProductsPayload {
 
 type Query {
     products: ProductsPayload!
-    product(id: ID!): ProductPayload!
+    product(id: Int!): ProductPayload!
 }
 
 type ProductDeletePayload{
@@ -37,7 +38,7 @@ type ProductDeletePayload{
 }
 
 type Mutation {
-    productCreate(name: String!, price: Float!, quantity: Int!): ProductPayload!
-    productUpdate(id: ID!, name: String!, price: Float!, quantity: Int!): ProductPayload!
-    productDelete(id: ID!): ProductDeletePayload
+    productCreate(name: String!, price: Float!, quantity: Int!, createdBy: Int!): ProductPayload!
+    productUpdate(id: Int!, name: String!, price: Float!, quantity: Int!): ProductPayload!
+    productDelete(id: Int!): ProductDeletePayload
 }
