@@ -6,14 +6,14 @@ from flask_migrate import Migrate
 from ariadne import graphql_sync, load_schema_from_path, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 from ariadne.contrib.federation import FederatedObjectType, make_federated_schema
-from schema.queries import resolve_users, resolve_user
+from schema.queries import resolve_users, resolve_user, resolve_user_reference
 from schema.mutations import resolve_user_create, resolve_user_update, resolve_user_delete
 
 query = ObjectType("Query")
 query.set_field("users", resolve_users)
 query.set_field("user", resolve_user)
 user = FederatedObjectType("User")
-user.reference_resolver(resolve_user)
+user.reference_resolver(resolve_user_reference)
 
 mutation = ObjectType("Mutation")
 mutation.set_field("userCreate", resolve_user_create)

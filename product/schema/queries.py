@@ -1,4 +1,3 @@
-
 from models import db, Product
 
 
@@ -30,6 +29,22 @@ def resolve_product(_, info, id):
             "success": True,
             "product": product
         }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+
+    return payload
+
+
+def resolve_product_reference(_, info, representation):
+    try:
+        product = Product.get(representation.get("id"))
+
+        if not product:
+            raise Exception("The product %s doesn't exists" % id)
+        payload = product
     except Exception as error:
         payload = {
             "success": False,
