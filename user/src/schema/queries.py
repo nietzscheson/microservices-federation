@@ -1,7 +1,11 @@
+from ariadne import ObjectType
+from ariadne.contrib.federation import FederatedObjectType
+from src.models import User
 
-from models import User
+query = ObjectType("Query")
+user = FederatedObjectType("User")
 
-
+@query.field("users")
 def resolve_users(_, info):
     try:
         users = [user.to_json() for user in User.all()]
@@ -20,6 +24,7 @@ def resolve_users(_, info):
         }
     return payload
 
+@query.field("user")
 def resolve_user(_, info, id):
     try:
         user = User.get(id)
@@ -38,7 +43,7 @@ def resolve_user(_, info, id):
 
     return payload
 
-
+@user.reference_resolver
 def resolve_user_reference(_, info, representation):
     try:
         user = User.get(representation.get("id"))

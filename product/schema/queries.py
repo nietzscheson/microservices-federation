@@ -1,6 +1,13 @@
+from ariadne import ObjectType
+from ariadne.contrib.federation import FederatedObjectType
 from models import db, Product
 
+query = ObjectType("Query")
+product = FederatedObjectType("Product")
 
+user = FederatedObjectType("User")
+
+@query.field("products")
 def resolve_products(_, info):
     try:
         products = [product.to_json() for product in Product.all()]
@@ -19,6 +26,7 @@ def resolve_products(_, info):
         }
     return payload
 
+@query.field("product")
 def resolve_product(_, info, id):
     try:
         product = Product.get(id)
@@ -53,6 +61,7 @@ def resolve_product_reference(_, info, representation):
 
     return payload
 
+@product.field("createdBy")
 def resolve_created_by(product, *_):
     # return {"__typename": "User", "id": product["created_by"]}
     return {"id": product["created_by"]}

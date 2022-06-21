@@ -1,21 +1,21 @@
 import os
 from flask import Flask, escape, request, jsonify
-from models import db
+from src.models import db
 from flask_migrate import Migrate
 
 from ariadne import graphql_sync, load_schema_from_path, snake_case_fallback_resolvers
 from ariadne.constants import PLAYGROUND_HTML
 from ariadne.contrib.federation import make_federated_schema
-from schema.queries import query, product, user
-from schema.mutations import mutation
 
+from src.schema.queries import query, user
+from src.schema.mutations import mutation
 
-type_defs = load_schema_from_path("schema/schema.graphql")
+type_defs = load_schema_from_path("src/schema/schema.graphql")
 
-schema = make_federated_schema(type_defs, [query, product, user], mutation, snake_case_fallback_resolvers)
+schema = make_federated_schema(type_defs, [query, user], mutation, snake_case_fallback_resolvers)
 
 app = Flask(__name__)
-app.config.from_object("config.Config")
+app.config.from_object("src.config.Config")
 
 db.init_app(app)
 migrate = Migrate(app, db)

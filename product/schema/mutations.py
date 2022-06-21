@@ -1,15 +1,18 @@
-
+from ariadne import convert_kwargs_to_snake_case, ObjectType
 from models import db, Product
-from ariadne import convert_kwargs_to_snake_case
+
+
+mutation = ObjectType("Mutation")
 
 @convert_kwargs_to_snake_case
+@mutation.field("productCreate")
 def resolve_product_create(_, info, **kwargs):
     try:
         product = Product(
             name=kwargs["name"],
             price=kwargs["price"],
             quantity=kwargs["quantity"],
-            created_by=kwargs["created_by"]
+            created_by=kwargs["createdBy"]
         )
         product.save()
 
@@ -26,6 +29,7 @@ def resolve_product_create(_, info, **kwargs):
     return payload
 
 @convert_kwargs_to_snake_case
+@mutation.field("productUpdate")
 def resolve_product_update(_, info, **kwargs):
     try:
         product = Product.get(kwargs["id"])
@@ -51,6 +55,7 @@ def resolve_product_update(_, info, **kwargs):
     return payload
 
 @convert_kwargs_to_snake_case
+@mutation.field("productDelete")
 def resolve_product_delete(_, info, id):
     try:
         product = Product.get(id)
