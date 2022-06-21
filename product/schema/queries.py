@@ -52,3 +52,7 @@ def resolve_product_reference(_, info, representation):
         }
 
     return payload
+
+def resolve_created_by(product, *_):
+    # return {"__typename": "User", "id": product["created_by"]}
+    return {"id": product["created_by"]}
