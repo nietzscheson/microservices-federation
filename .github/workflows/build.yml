@@ -5,6 +5,10 @@ on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NAME: flask
+      DATABASE_URL_USER: postgresql://postgres:postgres@postgres:5432/users
+      DATABASE_URL_PRODUCT: postgresql://postgres:postgres@postgres:5432/products
     steps:
       - name: Checkout
         uses: actions/checkout@v2

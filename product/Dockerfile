@@ -2,7 +2,7 @@ FROM python:3.9 as base
 
 ARG NAME
 ENV NAME=$NAME
-ENV FLASK_APP=/product/app.py
+ENV FLASK_APP=/product/src/app.py
 ENV FLASK_ENV=development
 
 ENV LANG C.UTF-8

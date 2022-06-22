@@ -1,6 +1,6 @@
 import pytest
-from app import app as _app
-from models import db as _db
+from src.app import app as _app
+from src.models import db as _db, User
 from sqlalchemy import event
 
 
@@ -11,7 +11,7 @@ def app():
     return _app
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def db(app):
     """
     Returns session-wide initialised database.
@@ -55,4 +55,15 @@ def session(app, db):
 
 @pytest.fixture()
 def client(app):
-    return app.test_client()
+    def _(query={}):
+        client = app.test_client()
+        return client.post("/graphql", json=query)
+    return _
+
+@pytest.fixture()
+def add_user(app):
+    def _(**kwargs):
+        user = User(**kwargs)
+        user.save()
+        return user
+    return _

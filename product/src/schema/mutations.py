@@ -1,5 +1,5 @@
 from ariadne import convert_kwargs_to_snake_case, ObjectType
-from models import db, Product
+from src.models import db, Product
 
 
 mutation = ObjectType("Mutation")

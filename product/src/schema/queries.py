@@ -1,6 +1,6 @@
 from ariadne import ObjectType
 from ariadne.contrib.federation import FederatedObjectType
-from models import db, Product
+from src.models import db, Product
 
 query = ObjectType("Query")
 product = FederatedObjectType("Product")
