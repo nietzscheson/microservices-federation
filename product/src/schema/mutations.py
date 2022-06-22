@@ -32,15 +32,13 @@ def resolve_product_create(_, info, **kwargs):
 @mutation.field("productUpdate")
 def resolve_product_update(_, info, **kwargs):
     try:
-        product = Product.get(kwargs["id"])
+        id = kwargs["id"]
+        product = Product.get(id)
 
         if not product:
             raise Exception("The product %s doesn't exists" % id)
 
-        product.name = kwargs["name"]
-        product.price = kwargs["price"]
-        product.quantity = kwargs["quantity"]
-        product.save()
+        product.update(**kwargs)
 
         payload = {
             "success": True,

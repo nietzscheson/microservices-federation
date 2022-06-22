@@ -39,6 +39,6 @@ type ProductDeletePayload{
 
 type Mutation {
     productCreate(name: String!, price: Float!, quantity: Int!, createdBy: Int!): ProductPayload!
-    productUpdate(id: Int!, name: String!, price: Float!, quantity: Int!): ProductPayload!
+    productUpdate(id: Int!, name: String!, price: Float, quantity: Int): ProductPayload!
     productDelete(id: Int!): ProductDeletePayload
 }

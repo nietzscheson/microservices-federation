@@ -16,4 +16,3 @@ jobs:
         run: make
       - name: Test Project
         run: make test
-

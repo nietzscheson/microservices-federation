@@ -27,6 +27,14 @@ class Product(db.Model):
         db.session.commit()
 
     @classmethod
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+        db.session.commit()
+
+
+    @classmethod
     def get(self, id: int):
         return db.session.query(self).get(id)
 

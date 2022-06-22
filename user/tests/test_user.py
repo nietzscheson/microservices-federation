@@ -17,11 +17,11 @@ def test_user_create(client):
     )
 
     data = response.get_json()["data"]
-    user_create = data["userCreate"]
+    operation = data["userCreate"]
 
-    errors = user_create["errors"]
-    success = user_create["success"]
-    user = user_create["user"]
+    errors = operation["errors"]
+    success = operation["success"]
+    user = operation["user"]
 
     assert errors == None
     assert success == True
@@ -49,11 +49,11 @@ def test_user_update(client, add_user):
     )
 
     data = response.get_json()["data"]
-    user_update = data["userUpdate"]
+    operation = data["userUpdate"]
 
-    errors = user_update["errors"]
-    success = user_update["success"]
-    user = user_update["user"]
+    errors = operation["errors"]
+    success = operation["success"]
+    user = operation["user"]
 
     assert errors == None
     assert success == True
@@ -77,10 +77,10 @@ def test_user_delete(client, add_user):
     )
 
     data = response.get_json()["data"]
-    user_delete = data["userDelete"]
+    operation = data["userDelete"]
 
-    errors = user_delete["errors"]
-    success = user_delete["success"]
+    errors = operation["errors"]
+    success = operation["success"]
 
     assert errors == None
     assert success == True
@@ -106,11 +106,11 @@ def test_user(client, add_user):
     )
 
     data = response.get_json()["data"]
-    user = data["user"]
+    operation = data["user"]
 
-    errors = user["errors"]
-    success = user["success"]
-    user = user["user"]
+    errors = operation["errors"]
+    success = operation["success"]
+    user = operation["user"]
 
     assert errors == None
     assert success == True
@@ -139,11 +139,11 @@ def test_users(client, add_user):
     )
 
     data = response.get_json()["data"]
-    users = data["users"]
+    operation = data["users"]
 
-    errors = users["errors"]
-    success = users["success"]
-    users = users["users"]
+    errors = operation["errors"]
+    success = operation["success"]
+    users = operation["users"]
 
     assert errors == None
     assert success == True

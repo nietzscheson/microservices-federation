@@ -15,6 +15,7 @@ ps:
 	docker-compose ps
 test:
 	docker-compose run --rm user python -m pytest tests/ -v -s
+	docker-compose run --rm product python -m pytest tests/ -v -s
 debug:
 	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build
 prune:
