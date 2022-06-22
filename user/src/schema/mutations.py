@@ -1,8 +1,10 @@
+from ariadne import ObjectType, convert_kwargs_to_snake_case
+from src.models import User
 
-from models import db, User
-from ariadne import convert_kwargs_to_snake_case
+mutation = ObjectType("Mutation")
 
 @convert_kwargs_to_snake_case
+@mutation.field("userCreate")
 def resolve_user_create(_, info, name):
     try:
         user = User(name=name)
@@ -21,6 +23,7 @@ def resolve_user_create(_, info, name):
     return payload
 
 @convert_kwargs_to_snake_case
+@mutation.field("userUpdate")
 def resolve_user_update(_, info, id, name):
     try:
         user = User.get(id)
@@ -44,6 +47,7 @@ def resolve_user_update(_, info, id, name):
     return payload
 
 @convert_kwargs_to_snake_case
+@mutation.field("userDelete")
 def resolve_user_delete(_, info, id):
     try:
         user = User.get(id)

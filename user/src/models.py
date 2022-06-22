@@ -24,3 +24,6 @@ class User(db.Model):
     def get(self, id: int):
         return db.session.query(self).get(id)
 
+    @classmethod
+    def all(self):
+        return db.session.query(self).all()

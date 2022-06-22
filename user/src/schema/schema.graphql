@@ -3,8 +3,8 @@ schema {
     mutation: Mutation
 }
 
-type User {
-    id: ID!
+type User @key(fields: "id") {
+    id: Int!
     name: String!
 }
 
@@ -22,7 +22,7 @@ type UsersPayload {
 
 type Query {
     users: UsersPayload!
-    user(id: ID!): UserPayload!
+    user(id: Int!): UserPayload!
 }
 
 type UserDeletePayload{
@@ -32,6 +32,6 @@ type UserDeletePayload{
 
 type Mutation {
     userCreate(name: String!): UserPayload!
-    userUpdate(id: ID!, name: String!): UserPayload!
-    userDelete(id: ID!): UserDeletePayload
+    userUpdate(id: Int!, name: String!): UserPayload!
+    userDelete(id: Int!): UserDeletePayload
 }

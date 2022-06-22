@@ -6,5 +6,5 @@ class Config(object):
     DEVELOPMENT = True
     DEBUG = True
     SECRET_KEY = 'this-really-needs-to-be-changed'
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:postgres@postgres:5432/postgres"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
