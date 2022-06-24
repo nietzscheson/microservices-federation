@@ -26,6 +26,20 @@ services:
       - type: bind
         source: ./product
         target: /product
+
+  order:
+    ports:
+      - 5002:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: $DATABASE_URL_ORDER
+    volumes:
+      - type: bind
+        source: ./order
+        target: /order
+
   postgres:
     image: postgres:13.2-alpine
     build: ./postgres
@@ -35,7 +49,7 @@ services:
       - 5432:5432
     environment:
         POSTGRES_PASSWORD: "postgres"
-        POSTGRES_MULTIPLE_DATABASES: users, products
+        POSTGRES_MULTIPLE_DATABASES: users, products, orders
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

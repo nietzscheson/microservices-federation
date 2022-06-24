@@ -6,18 +6,18 @@ from flask_migrate import Migrate
 from ariadne import graphql_sync, load_schema_from_path, snake_case_fallback_resolvers
 from ariadne.constants import PLAYGROUND_HTML
 from ariadne.contrib.federation import make_federated_schema
-from src.schema.queries import query, product, user
+from src.schema.queries import query, order, user
 from src.schema.mutations import mutation
 from src.command import fixtures
 
 type_defs = load_schema_from_path("src/schema/schema.graphql")
 
-schema = make_federated_schema(type_defs, [query, product, user], mutation, snake_case_fallback_resolvers)
+schema = make_federated_schema(type_defs, [query, order, user], mutation, snake_case_fallback_resolvers)
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
-
 app.cli.add_command(fixtures)
+
 
 db.init_app(app)
 migrate = Migrate(app, db)

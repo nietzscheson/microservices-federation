@@ -9,6 +9,7 @@ from ariadne.contrib.federation import make_federated_schema
 
 from src.schema.queries import query, user
 from src.schema.mutations import mutation
+from src.command import fixtures
 
 type_defs = load_schema_from_path("src/schema/schema.graphql")
 
@@ -16,6 +17,8 @@ schema = make_federated_schema(type_defs, [query, user], mutation, snake_case_fa
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
+
+app.cli.add_command(fixtures)
 
 db.init_app(app)
 migrate = Migrate(app, db)
