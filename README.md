@@ -39,10 +39,10 @@ user       sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5000->5000/tc
 ```
 The microservices are running in:
 
-- APIGateway: [localhost:4000/graphql](localhost:4000/graphql)
-- User API: [localhost:5000/graphql](localhost:5000/graphql)
-- Product API: [localhost:5001/graphql](localhost:5001/graphql)
-- Order API: [localhost:5002/graphql](localhost:5002/graphql)
+- APIGateway: [localhost:4000/graphql](http://localhost:4000/graphql)
+- User API: [localhost:5000/graphql](http://localhost:5000/graphql)
+- Product API: [localhost:5001/graphql](http://localhost:5001/graphql)
+- Order API: [localhost:5002/graphql](http://localhost:5002/graphql)
 
 5. Run test:
 ```bash
