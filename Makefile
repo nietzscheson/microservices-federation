@@ -24,3 +24,7 @@ prune:
 	docker system prune -f
 upgrade:
 	docker-compose run --rm core flask db upgrade
+fixtures:
+	docker-compose run --rm user flask fixtures
+	docker-compose run --rm product flask fixtures
+	docker-compose run --rm order flask fixtures

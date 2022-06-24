@@ -2,8 +2,8 @@ Microservices Federation Project
 ==============
 
 This is a Docker (with docker-compose) environment for Microservices Federation Project.
-Is a example that how we can to federate multiples microservices using GraphQl Federation.
-Each schema in each microservice works independently. With Apollo Federation they work like a  team.
+Is a example that how we can to federate multiples microservices using [Apollo Federation](https://www.apollographql.com/docs/federation/).
+Each schema in each microservice works independently. With Apollo Federation they work like a team.
 
 ![Microservices Federation](./docs/microservices-federation.png?raw=true "Graph of Microservices Federation")
 
@@ -42,6 +42,7 @@ The microservices are running in:
 - APIGateway: [localhost:4000/graphql](localhost:4000/graphql)
 - User API: [localhost:5000/graphql](localhost:5000/graphql)
 - Product API: [localhost:5001/graphql](localhost:5001/graphql)
+- Order API: [localhost:5002/graphql](localhost:5002/graphql)
 
 5. Run test:
 ```bash
