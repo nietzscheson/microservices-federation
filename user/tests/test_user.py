@@ -105,7 +105,7 @@ def test_user(client, add_user):
 
     user = data["user"]
 
-    assert user["id"] == 1
+    assert user["id"] == str(1)
     assert user["name"] == "Isabella"
 
 def test_users(client, add_user):
