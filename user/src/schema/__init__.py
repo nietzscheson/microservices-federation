@@ -1,12 +1,16 @@
 from typing import Optional
 import strawberry
-from strawberry.schema.config import StrawberryConfig
-from src.schema.query import User
+from src.schema.query import UserQuery
+from src.schema.mutation import UserMutation
 
 
 @strawberry.type
-class Query(User):
+class Query(UserQuery):
     _service: Optional[str]
 
-schema = strawberry.federation.Schema(Query)
+@strawberry.type
+class Mutation(UserMutation):
+    _service: Optional[str]
+
+schema = strawberry.federation.Schema(query=Query, mutation=Mutation)
 

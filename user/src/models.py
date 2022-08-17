@@ -27,3 +27,10 @@ class User(db.Model):
     @classmethod
     def all(self):
         return db.session.query(self).all()
+
+    @classmethod
+    def paginate(self, page: int = 1, perPage: int = 10, sortField: str = "name", sortOrder: str = "ASC"):
+
+        order_by = eval(f"self.{sortField}.{sortOrder.lower()}()")
+
+        return self.query.order_by(order_by).paginate(page,perPage, False).items

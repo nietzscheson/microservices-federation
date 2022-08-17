@@ -1,89 +1,69 @@
-#def test_user_create(client):
-#
-#    response = client(query={
-#        "query": """
-#        mutation UserCreate($name: String!){
-#            userCreate(name: $name){
-#                errors
-#                success
-#                user{
-#                    id
-#                    name
-#                }
-#            }
-#        }
-#        """,
-#        "variables": {"name": "Isabella"}}
-#    )
-#
-#    data = response.get_json()["data"]
-#    operation = data["userCreate"]
-#
-#    errors = operation["errors"]
-#    success = operation["success"]
-#    user = operation["user"]
-#
-#    assert errors == None
-#    assert success == True
-#    assert user["id"] == 1
-#    assert user["name"] == "Isabella"
-#
-#def test_user_update(client, add_user):
-#
-#    user = add_user(name="Isabella")
-#
-#    response = client(query={
-#        "query": """
-#        mutation UserUpdate($id: Int!, $name: String!){
-#            userUpdate(id: $id, name: $name){
-#                errors
-#                success
-#                user{
-#                    id
-#                    name
-#                }
-#            }
-#        }
-#        """,
-#        "variables": {"id": user.id, "name": "Emmanuel"}}
-#    )
-#
-#    data = response.get_json()["data"]
-#    operation = data["userUpdate"]
-#
-#    errors = operation["errors"]
-#    success = operation["success"]
-#    user = operation["user"]
-#
-#    assert errors == None
-#    assert success == True
-#    assert user["id"] == 1
-#    assert user["name"] == "Emmanuel"
-#
-#def test_user_delete(client, add_user):
-#
-#    user = add_user(name="Isabella")
-#
-#    response = client(query={
-#        "query": """
-#        mutation UserDelete($id: Int!){
-#            userDelete(id: $id){
-#                errors
-#                success
-#            }
-#        }
-#        """,
-#        "variables": {"id": user.id}}
-#    )
-#
-#    data = response.get_json()["data"]
-#    operation = data["userDelete"]
-#
-#    errors = operation["errors"]
-#    success = operation["success"]
-#
-#    assert errors == None
-#    assert success == True
+from time import sleep
+from src.models import User
+
+def test_user_create(client):
+
+    response = client(query={
+        "query": """
+        mutation UserCreate($name: String!){
+            userCreate(name: $name){
+                id
+                name
+            }
+        }
+        """,
+        "variables": {"name": "Isabella"}}
+    )
+
+    data = response.get_json()["data"]
+    user = data["userCreate"]
+
+    assert user["id"] == str(1)
+    assert user["name"] == "Isabella"
+
+def test_user_update(client, add_user):
+
+    user = add_user(name="Isabella")
+
+    response = client(query={
+        "query": """
+        mutation UserUpdate($id: Int!, $name: String!){
+            userUpdate(id: $id, name: $name){
+                id
+                name
+            }
+        }
+        """,
+        "variables": {"id": user.id, "name": "Emmanuel"}}
+    )
+
+    data = response.get_json()["data"]
+    user = data["userUpdate"]
+
+    assert user["id"] == str(1)
+    assert user["name"] == "Emmanuel"
+
+def test_user_delete(client, add_user):
+
+    user = add_user(name="Isabella")
+
+    response = client(query={
+        "query": """
+        mutation UserDelete($id: Int!){
+            userDelete(id: $id){
+                id
+                name
+            }
+        }
+        """,
+        "variables": {"id": user.id}}
+    )
+
+    data = response.get_json()["data"]
+    user = data["userDelete"]
+
+    assert user["id"] == str(1)
+    assert user["name"] == "Isabella"
 
 def test_user(client, add_user):
 

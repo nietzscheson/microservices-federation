@@ -1,0 +1,1 @@
+{"buildTargets":["build","debug","down","fixtures","init","prune","ps","pull","test","up","upgrade","volume"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
