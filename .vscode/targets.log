@@ -1,3 +1,4 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # GNU Make 3.81
 # Copyright (C) 2006  Free Software Foundation, Inc.
 # This is free software; see the source for copying conditions.
@@ -5,8 +6,9 @@
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
 
-# Make data base, printed on Wed Aug 17 15:38:48 2022
+# Make data base, printed on Thu Aug 18 14:53:40 2022
 
 # Variables
 
@@ -35,15 +37,15 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 VSCODE_CWD = /
 # environment
-PATH = /usr/bin:/bin:/usr/sbin:/sbin
+PATH = /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 # environment
-LaunchInstanceID = 67E6B9E3-8672-4FBA-B789-8FC9098AA043
+LaunchInstanceID = C145929A-A526-4885-9729-0C4708E68DA3
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.FJEuPLyetK/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.nivSdFof6r/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -129,7 +131,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 419
+VSCODE_PID = 427
 # variable set hash-table stats:
 # Load=60/1024=6%, Rehash=0, Collisions=1/84=1%
 
@@ -139,9 +141,9 @@ VSCODE_PID = 419
 
 # Directories
 
-# . (device 16777220, inode 27831768): 19 files, no impossibilities.
+# . (device 16777220, inode 27831768): 20 files, no impossibilities.
 
-# 19 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -181,7 +183,7 @@ up: pull build
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-03 11:32:28
+#  Last modified 2022-08-17 16:02:13
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -217,7 +219,7 @@ upgrade:
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 26):
-	docker-compose run --rm core flask db upgrade
+	docker-compose run --rm user flask db upgrade
 	
 
 prune:
@@ -296,7 +298,7 @@ ps:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Wed Aug 17 15:38:48 2022
+# Finished Make data base on Thu Aug 18 14:53:40 2022
 
  
 make: *** No rule to make target `all'.  Stop.

@@ -23,7 +23,7 @@ prune:
 	docker volume prune -f
 	docker system prune -f
 upgrade:
-	docker-compose run --rm core flask db upgrade
+	docker-compose run --rm user flask db upgrade
 fixtures:
 	docker-compose run --rm user flask fixtures
 	# docker-compose run --rm product flask fixtures

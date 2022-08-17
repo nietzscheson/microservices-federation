@@ -5,14 +5,15 @@ def test_user_create(client):
 
     response = client(query={
         "query": """
-        mutation UserCreate($name: String!){
-            userCreate(name: $name){
+        mutation UserCreate($name: String!, $email: String!, $password: String!){
+            userCreate(name: $name, email: $email, password: $password){
                 id
                 name
+                email
             }
         }
         """,
-        "variables": {"name": "Isabella"}}
+        "variables": {"name": "Isabella", "email": "isabella@example.com", "password": "1234@#example"}}
     )
 
     data = response.get_json()["data"]

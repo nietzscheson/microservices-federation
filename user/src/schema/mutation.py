@@ -1,17 +1,18 @@
+from distutils.log import Log
 import typing
 from unicodedata import name
 import strawberry
 from strawberry.types import Info
 from src.models import User as UserModel
-from src.schema.definitions import User as UserDefinition
+from src.schema.definitions import User as UserDefinition, Login
 
 @strawberry.type(name="User")
 class UserMutation:
 
     @strawberry.mutation
-    def user_create(self, info: Info, name: str) -> UserDefinition:
+    def user_create(self, info: Info, name: str, email: str, password: str) -> UserDefinition:
 
-        user = UserModel(name=name)
+        user = UserModel(name=name, email=email, password=password)
         user.save()
 
         return user
@@ -47,3 +48,19 @@ class UserMutation:
 #
 #        return  UserModel.all()
 #
+
+    @strawberry.mutation
+    def login(self, email: str, password: str) -> typing.Optional[Login]:
+
+        user = UserModel().get_by(email=email)
+
+        # print(user)
+
+        # if user.verify_password(password=password):
+        #    print(True)
+        # print("Here!", user)
+        # user = UserModel(name=name, email=email, password=password)
+        # user.save()
+        return Login(access_token=email)
+
+
