@@ -1,8 +1,11 @@
 from distutils.log import Log
+from pyexpat.errors import messages
 import typing
 from unicodedata import name
 import strawberry
 from strawberry.types import Info
+from flask_jwt_extended import create_access_token
+
 from src.models import User as UserModel
 from src.schema.definitions import User as UserDefinition, Login
 
@@ -51,16 +54,13 @@ class UserMutation:
 
     @strawberry.mutation
     def login(self, email: str, password: str) -> typing.Optional[Login]:
+        try:
+            user = UserModel().get_by(email=email)
 
-        user = UserModel().get_by(email=email)
-
-        # print(user)
-
-        # if user.verify_password(password=password):
-        #    print(True)
-        # print("Here!", user)
-        # user = UserModel(name=name, email=email, password=password)
-        # user.save()
-        return Login(access_token=email)
+            if user.verify_password(password=password):
+                access_token = create_access_token(identity=user.email)
+                return Login(access_token=access_token)
+        except Exception as errors:
+            return Login(access_token=None)
 
 

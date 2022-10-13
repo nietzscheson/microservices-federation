@@ -6,8 +6,8 @@ db = SQLAlchemy()
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
-    email = db.Column(db.String(80))
-    password = db.Column(db.String(128))
+    email = db.Column(db.String(80), unique=True)
+    password_hash = db.Column(db.String(128))
 
     def to_json(self):
         return {
@@ -43,13 +43,12 @@ class User(db.Model):
         return self.query.order_by(order_by).paginate(page,perPage, False).items
 
     @property
-    def hash_password(self):
+    def password(self,):
         raise AttributeError('Password not readable')
 
-    @hash_password.setter
-    def hash_password(self, password):
-        self.password = generate_password_hash(password)
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        print(self.password)
-        return check_password_hash(self.password, password)
+        return check_password_hash(self.password_hash, password)

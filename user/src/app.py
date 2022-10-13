@@ -3,6 +3,7 @@ from flask import Flask, escape, request
 from src.models import db
 from flask_migrate import Migrate
 from strawberry.flask.views import GraphQLView
+from flask_jwt_extended import JWTManager
 
 from src.command import fixtures
 from src.schema import schema
@@ -14,6 +15,7 @@ app.cli.add_command(fixtures)
 
 db.init_app(app)
 migrate = Migrate(app, db)
+jwt = JWTManager(app)
 
 @app.route('/')
 def index():

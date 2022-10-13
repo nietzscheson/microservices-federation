@@ -25,6 +25,8 @@ prune:
 upgrade:
 	docker-compose run --rm user flask db upgrade
 fixtures:
-	docker-compose run --rm user flask fixtures
+	@docker-compose run --rm user flask fixtures
 	# docker-compose run --rm product flask fixtures
 	# docker-compose run --rm order flask fixtures
+migrate:
+	docker-compose run --rm user flask db migrate

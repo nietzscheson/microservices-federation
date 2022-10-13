@@ -3,7 +3,7 @@ version: "3.9"
 services:
   user:
     ports:
-      - 5000:5000
+      - 5001:5000
     depends_on:
       postgres:
         condition: service_healthy

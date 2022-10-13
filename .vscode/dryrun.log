@@ -4,7 +4,6 @@ docker-compose down
 docker volume prune -f
 docker-compose pull
 docker-compose build
- 
 docker-compose up -d
 make ps
 make: Leaving directory `/Users/nietzscheson/Sites/nietzscheson/microservice-federation'
