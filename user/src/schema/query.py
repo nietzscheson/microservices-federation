@@ -4,10 +4,11 @@ import strawberry
 from strawberry.types import Info
 from src.models import User as UserModel
 from src.schema.definitions import User as UserDefinition
+from flask_jwt_extended import jwt_required
 
 @strawberry.type(name="User")
 class UserQuery:
-
+    @jwt_required()
     @strawberry.field
     def user(self, info: Info, id: strawberry.ID) -> UserDefinition:
 

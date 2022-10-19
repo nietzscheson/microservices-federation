@@ -6,8 +6,9 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
 
-# Make data base, printed on Thu Oct 13 14:34:41 2022
+# Make data base, printed on Mon Oct 17 14:54:06 2022
 
 # Variables
 
@@ -36,15 +37,15 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 VSCODE_CWD = /
 # environment
-PATH = /usr/bin:/bin:/usr/sbin:/sbin
+PATH = /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 # environment
-LaunchInstanceID = 26607786-A02F-4400-9DD6-2C9FE2F3B144
+LaunchInstanceID = 236FCD94-DC97-45AE-9C44-5B3F441D06EF
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.isbnGqhA29/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.SBVpBRQvOH/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -62,7 +63,7 @@ VSCODE_CODE_CACHE_PATH = /Users/nietzscheson/Library/Application Support/Code/Ca
 # environment
 LOGNAME = nietzscheson
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -118,7 +119,7 @@ MAKEFILES :=
 # environment
 LC_ALL = C
 # environment
-SECURITYSESSIONID = 186a5
+SECURITYSESSIONID = 186a6
 # automatic
 ^F = $(notdir $^)
 # default
@@ -130,7 +131,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 428
+VSCODE_PID = 438
 # variable set hash-table stats:
 # Load=60/1024=6%, Rehash=0, Collisions=1/84=1%
 
@@ -182,7 +183,7 @@ up: pull build
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-10-06 16:17:55
+#  Last modified 2022-10-13 15:36:04
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -201,7 +202,7 @@ test:
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 17):
-	docker-compose run --rm user python -m pytest tests/test_login.py::test_login -v -s
+	docker-compose run --rm user python -m pytest tests/ -v -s
 	# docker-compose run --rm product python -m pytest tests/ -v -s
 	
 
@@ -219,6 +220,14 @@ upgrade:
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 26):
 	docker-compose run --rm user flask db upgrade
+	
+
+migrate:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 32):
+	docker-compose run --rm user flask db migrate
 	
 
 prune:
@@ -250,7 +259,7 @@ fixtures:
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 28):
-	docker-compose run --rm user flask fixtures
+	@docker-compose run --rm user flask fixtures
 	# docker-compose run --rm product flask fixtures
 	# docker-compose run --rm order flask fixtures
 	
@@ -285,7 +294,7 @@ ps:
 	
 
 # files hash-table stats:
-# Load=17/1024=2%, Rehash=0, Collisions=0/34=0%
+# Load=18/1024=2%, Rehash=0, Collisions=0/35=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -297,7 +306,7 @@ ps:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Oct 13 14:34:41 2022
+# Finished Make data base on Mon Oct 17 14:54:06 2022
 
  
 make: *** No rule to make target `all'.  Stop.
