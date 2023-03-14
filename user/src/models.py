@@ -25,22 +25,22 @@ class User(db.Model):
 
     @classmethod
     def get(self, id: int):
-        return db.session.query(self).get(id)
+        return db.session.get(self, id)
 
     @classmethod
-    def get_by(self, **kwargs):
-        return db.session.query(self).filter_by(**kwargs).first()
+    def get_by(cls, **kwargs):
+        return db.session.query(cls).filter_by(**kwargs).first()
 
     @classmethod
-    def all(self):
-        return db.session.query(self).all()
+    def all(cls):
+        return db.session.query(cls).all()
 
     @classmethod
-    def paginate(self, page: int = 1, perPage: int = 10, sortField: str = "name", sortOrder: str = "ASC"):
+    def paginate(cls, page: int = 1, perPage: int = 10, sortField: str = "name", sortOrder: str = "ASC"):
 
-        order_by = eval(f"self.{sortField}.{sortOrder.lower()}()")
+        order_by = eval(f"cls.{sortField}.{sortOrder.lower()}()")
 
-        return self.query.order_by(order_by).paginate(page,perPage, False).items
+        return db.paginate(db.select(cls).order_by(order_by), page=page, max_per_page=perPage).items
 
     @property
     def password(self,):

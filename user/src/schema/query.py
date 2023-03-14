@@ -8,7 +8,7 @@ from flask_jwt_extended import jwt_required
 
 @strawberry.type(name="User")
 class UserQuery:
-    @jwt_required()
+    # @jwt_required()
     @strawberry.field
     def user(self, info: Info, id: strawberry.ID) -> UserDefinition:
 

@@ -1,7 +1,4 @@
-from distutils.log import Log
-from pyexpat.errors import messages
 import typing
-from unicodedata import name
 import strawberry
 from strawberry.types import Info
 from flask_jwt_extended import create_access_token
@@ -9,7 +6,7 @@ from flask_jwt_extended import create_access_token
 from src.models import User as UserModel
 from src.schema.definitions import User as UserDefinition, Login
 
-@strawberry.type(name="User")
+@strawberry.type
 class UserMutation:
 
     @strawberry.mutation
@@ -44,13 +41,6 @@ class UserMutation:
         user.delete()
 
         return user
-
-
-#    @strawberry.field
-#    def users(self, info: Info) -> typing.List[UserDefinition]:
-#
-#        return  UserModel.all()
-#
 
     @strawberry.mutation
     def login(self, email: str, password: str) -> typing.Optional[Login]:
