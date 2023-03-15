@@ -62,8 +62,8 @@ def client(app):
 
 @pytest.fixture()
 def add_product(app):
-    def _(name="T-Shirt", price=10.5, quantity=3, created_by=1):
-        product = Product(name=name, price=price, quantity=quantity, created_by=created_by)
+    def _(**kwargs):
+        product = Product(**kwargs)
         product.save()
         return product
     return _

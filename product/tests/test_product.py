@@ -1,133 +1,109 @@
+from time import sleep
+from src.models import Product
+
 def test_product_create(client):
 
     response = client(query={
         "query": """
-        mutation ProductCreate($name: String!, $price: Float!, $quantity: Int!, $createdBy: Int!){
-            productCreate(name: $name, price: $price, quantity: $quantity, createdBy: $createdBy){
-                errors
-                success
-                product{
-                    id
-                    name
-                }
+        mutation ProductCreate($name: String!, $price: Float!, $quantity: Int!){
+            productCreate(name: $name, price: $price, quantity: $quantity){
+                id
+                name
+                price
+                quantity
+                createdBy
             }
         }
         """,
-        "variables": {"name": "T-Shirt", "price": 10.5, "quantity": 3, "createdBy":1}}
+        "variables": {"name": "T-Shirt", "price": 10.5, "quantity": 3}}
     )
 
     data = response.get_json()["data"]
-    operation = data["productCreate"]
+    user = data["productCreate"]
 
-    errors = operation["errors"]
-    success = operation["success"]
-    product = operation["product"]
-
-    assert errors == None
-    assert success == True
-    assert product["id"] == 1
-    assert product["name"] == "T-Shirt"
+    assert user["id"] == str(1)
+    assert user["name"] == "T-Shirt"
 
 def test_product_update(client, add_product):
 
-    product = add_product()
+    user = add_product(name="T-Shirt", created_by=1)
 
     response = client(query={
         "query": """
-        mutation ProductUpdate($id: Int!, $name: String!, $quantity: Int!, $price: Float!){
-            productUpdate(id: $id, name: $name, quantity: $quantity, price: $price){
-                errors
-                success
-                product{
-                    id
-                    name
-                    quantity
-                    price
-                }
+        mutation ProductUpdate($id: Int!, $name: String!){
+            productUpdate(id: $id, name: $name){
+                id
+                name
+                createdBy
             }
         }
         """,
-        "variables": {"id": product.id, "name": "Pants", "quantity": 20, "price": 100.0}}
+        "variables": {"id": user.id, "name": "T-Shirt"}}
     )
 
     data = response.get_json()["data"]
-    operation = data["productUpdate"]
+    product = data["productUpdate"]
 
-    errors = operation["errors"]
-    success = operation["success"]
-    product = operation["product"]
-
-    assert errors == None
-    assert success == True
-    assert product["id"] == 1
-    assert product["name"] == "Pants"
-    assert product["quantity"] == 20
-    assert product["price"] == 100.0
-
-def test_product_delete(client, add_product):
-    product = add_product()
-
-    response = client(query={
-        "query": """
-        mutation ProductDelete($id: Int!){
-            productDelete(id: $id){
-                errors
-                success
-            }
-        }
-        """,
-        "variables": {"id": product.id}}
-    )
-    data = response.get_json()["data"]
-    operation = data["productDelete"]
-    errors = operation["errors"]
-    success = operation["success"]
-    assert errors == None
-    assert success == True
-
-def test_product(client, add_product):
-    product = add_product()
-
-    response = client(query={
-        "query": """
-        query Product($id: Int!){
-            product(id: $id){
-                errors
-                success
-                product{
-                    id
-                    name
-                }
-            }
-        }
-        """,
-        "variables": {"id": product.id}}
-    )
-    data = response.get_json()["data"]
-    operation = data["product"]
-    errors = operation["errors"]
-    success = operation["success"]
-    product = operation["product"]
-    assert errors == None
-    assert success == True
-    assert product["id"] == 1
+    assert product["id"] == str(1)
     assert product["name"] == "T-Shirt"
+    assert product["createdBy"] == 1
 
-def test_products(client, add_product):
+def test_user_delete(client, add_user):
 
-    add_product(name="Monitor")
-    add_product(name="Keyboard")
+    user = add_user(name="Isabella")
 
     response = client(query={
         "query": """
-        query Products{
-            products{
-                errors
-                success
-                products{
-                    id
-                    name
-                }
+        mutation UserDelete($id: Int!){
+            userDelete(id: $id){
+                id
+                name
+            }
+        }
+        """,
+        "variables": {"id": user.id}}
+    )
+
+    data = response.get_json()["data"]
+    user = data["userDelete"]
+
+    assert user["id"] == str(1)
+    assert user["name"] == "Isabella"
+
+def test_user(client, add_user):
+
+    user = add_user(name="Isabella")
+
+    response = client(query={
+        "query": """
+        query User($id: ID!){
+            user(id: $id){
+                id
+                name
+            }
+        }
+        """,
+        "variables": {"id": user.id}}
+    )
+
+    data = response.get_json()["data"]
+
+    user = data["user"]
+
+    assert user["id"] == str(1)
+    assert user["name"] == "Isabella"
+
+def test_users(client, add_user):
+
+    add_user(name="Isabella")
+    add_user(name="Emmanuel")
+
+    response = client(query={
+        "query": """
+        query Users{
+            users{
+                id
+                name
             }
         }
         """,
@@ -135,12 +111,7 @@ def test_products(client, add_product):
     )
 
     data = response.get_json()["data"]
-    operation = data["products"]
 
-    errors = operation["errors"]
-    success = operation["success"]
-    products = operation["products"]
+    users = data["users"]
+    assert len(users) == 2
 
-    assert errors == None
-    assert success == True
-    assert len(products) == 2

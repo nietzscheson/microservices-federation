@@ -14,18 +14,18 @@ services:
       timeout: 5s
       retries: 5
 
-#  product:
-#    container_name: product
-#    build:
-#      context: ./product
-#      dockerfile: ./Dockerfile
-#      args:
-#        - NAME=product
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --fail http://product:5000/graphql || exit 1"]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
+  product:
+    container_name: product
+    build:
+      context: ./product
+      dockerfile: ./Dockerfile
+      args:
+        - NAME=product
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://product:5000/graphql || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 #
 #  order:
 #    container_name: order

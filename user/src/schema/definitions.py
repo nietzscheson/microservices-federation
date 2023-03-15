@@ -1,7 +1,6 @@
-import email
 from typing import Optional
 import strawberry
-
+from src.models import User as UserModel
 # @strawberry.type(description="Node Response")
 # class Response(object):
 #     success: Optional[bool] = strawberry.field(description="Success Advice", default = True)
@@ -12,6 +11,14 @@ class User:
     id: strawberry.ID
     name: str
     email: str
+
+    @classmethod
+    def resolve_reference(cls, id: strawberry.ID):
+        user = UserModel.get(id)
+
+        if user:
+            return user
+        raise Exception("The user %s doesn't exists" % id)
 
 @strawberry.type(description="Access Token")
 class Login(object):

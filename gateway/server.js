@@ -5,6 +5,7 @@ const gateway = new ApolloGateway({
     supergraphSdl: new IntrospectAndCompose({
         subgraphs: [
             { name: "users", url: "http://user:5000/graphql" },
+            { name: "products", url: "http://product:5000/graphql" },
         ],
     }),
 });

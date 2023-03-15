@@ -15,7 +15,7 @@ class Product(db.Model):
             "name": self.name,
             "price": self.price,
             "quantity": self.quantity,
-            "created_by": self.created_by,
+            "created_by": self.created_by
         }
 
     def save(self):
@@ -27,17 +27,22 @@ class Product(db.Model):
         db.session.commit()
 
     @classmethod
-    def update(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-        db.session.commit()
-
+    def get(cls, id: int):
+        return db.session.get(cls, id)
 
     @classmethod
-    def get(self, id: int):
-        return db.session.query(self).get(id)
+    def get_by(cls, **kwargs):
+        return db.session.query(cls).filter_by(**kwargs).first()
 
     @classmethod
-    def all(self):
-        return db.session.query(self).all()
+    def all(cls):
+        return db.session.query(cls).all()
+
+    @classmethod
+    def paginate(cls, page: int = 1, perPage: int = 10, sortField: str = "name", sortOrder: str = "ASC"):
+
+        order_by = eval(f"cls.{sortField}.{sortOrder.lower()}()")
+
+        return db.paginate(db.select(cls).order_by(order_by), page=page, max_per_page=perPage).items
+
+

@@ -1,15 +1,15 @@
 from typing import Optional
 import strawberry
-from src.schema.query import UserQuery
-from src.schema.mutation import UserMutation
+from src.schema.query import ProductQuery
+from src.schema.mutation import ProductMutation
 
 
 @strawberry.type
-class Query(UserQuery):
+class Query(ProductQuery):
     _service: Optional[str]
 
 @strawberry.type
-class Mutation(UserMutation):
+class Mutation(ProductMutation):
     _service: Optional[str]
 
 schema = strawberry.federation.Schema(query=Query, mutation=Mutation, enable_federation_2=True)
