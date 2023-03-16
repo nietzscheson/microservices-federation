@@ -1,6 +1,5 @@
 import pytest
-from src.app import app as _app
-from src.models import db as _db, User
+from src.app import app as _app, db as _db, User
 from sqlalchemy import event
 
 
@@ -64,6 +63,7 @@ def client(app):
 def add_user(app):
     def _(**kwargs):
         user = User(**kwargs)
-        user.save()
+        _db.session.add(user)
+        _db.session.commit()
         return user
     return _
