@@ -1,9 +1,9 @@
-FROM python:3.9 as base
+FROM python:3.11 as base
 
 ARG NAME
 ENV NAME=$NAME
 ENV FLASK_APP=/user/src/app.py
-ENV FLASK_ENV=development
+ENV FLASK_DEBUG=true
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8

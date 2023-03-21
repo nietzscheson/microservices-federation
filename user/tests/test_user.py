@@ -4,12 +4,8 @@ def test_user_create(client):
         "query": """
         mutation UserCreate($name: String!){
             userCreate(name: $name){
-                errors
-                success
-                user{
-                    id
-                    name
-                }
+                id
+                name
             }
         }
         """,
@@ -17,73 +13,12 @@ def test_user_create(client):
     )
 
     data = response.get_json()["data"]
-    operation = data["userCreate"]
 
-    errors = operation["errors"]
-    success = operation["success"]
-    user = operation["user"]
+    user = data["userCreate"]
 
-    assert errors == None
-    assert success == True
-    assert user["id"] == 1
+    assert user["id"] == str(1)
     assert user["name"] == "Isabella"
 
-def test_user_update(client, add_user):
-
-    user = add_user(name="Isabella")
-
-    response = client(query={
-        "query": """
-        mutation UserUpdate($id: Int!, $name: String!){
-            userUpdate(id: $id, name: $name){
-                errors
-                success
-                user{
-                    id
-                    name
-                }
-            }
-        }
-        """,
-        "variables": {"id": user.id, "name": "Emmanuel"}}
-    )
-
-    data = response.get_json()["data"]
-    operation = data["userUpdate"]
-
-    errors = operation["errors"]
-    success = operation["success"]
-    user = operation["user"]
-
-    assert errors == None
-    assert success == True
-    assert user["id"] == 1
-    assert user["name"] == "Emmanuel"
-
-def test_user_delete(client, add_user):
-
-    user = add_user(name="Isabella")
-
-    response = client(query={
-        "query": """
-        mutation UserDelete($id: Int!){
-            userDelete(id: $id){
-                errors
-                success
-            }
-        }
-        """,
-        "variables": {"id": user.id}}
-    )
-
-    data = response.get_json()["data"]
-    operation = data["userDelete"]
-
-    errors = operation["errors"]
-    success = operation["success"]
-
-    assert errors == None
-    assert success == True
 
 def test_user(client, add_user):
 
@@ -91,14 +26,10 @@ def test_user(client, add_user):
 
     response = client(query={
         "query": """
-        query User($id: Int!){
+        query User($id: ID!){
             user(id: $id){
-                errors
-                success
-                user{
-                    id
-                    name
-                }
+                id
+                name
             }
         }
         """,
@@ -106,45 +37,32 @@ def test_user(client, add_user):
     )
 
     data = response.get_json()["data"]
-    operation = data["user"]
 
-    errors = operation["errors"]
-    success = operation["success"]
-    user = operation["user"]
+    user = data["user"]
 
-    assert errors == None
-    assert success == True
-    assert user["id"] == 1
+    assert user["id"] == str(1)
     assert user["name"] == "Isabella"
 
-def test_users(client, add_user):
+def test_user_representation(client, add_user):
 
-    add_user(name="Isabella")
-    add_user(name="Emmanuel")
+    user = add_user(name="Isabella")
 
     response = client(query={
         "query": """
-        query Users{
-            users{
-                errors
-                success
-                users{
+            query UserRepresentation($id: Int!){
+                _entities(representations: [{ __typename: "UserType", id: $id }]) {
+                ...on UserType {
                     id
                     name
                 }
-            }
-        }
+            }}
         """,
-        "variables": {}}
+        "variables": {"id": user.id}}
     )
 
     data = response.get_json()["data"]
-    operation = data["users"]
 
-    errors = operation["errors"]
-    success = operation["success"]
-    users = operation["users"]
+    user = data["_entities"]
 
-    assert errors == None
-    assert success == True
-    assert len(users) == 2
+    assert user[0]["id"] == str(1)
+    assert user[0]["name"] == "Isabella"

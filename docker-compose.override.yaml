@@ -3,12 +3,7 @@ version: "3.9"
 services:
   user:
     ports:
-      - 5000:5000
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: $DATABASE_URL_USER
+      - 5001:5000
     volumes:
       - type: bind
         source: ./user
@@ -16,10 +11,7 @@ services:
 
   product:
     ports:
-      - 5001:5000
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - 5002:5000
     environment:
       DATABASE_URL: $DATABASE_URL_PRODUCT
     volumes:
@@ -27,32 +19,16 @@ services:
         source: ./product
         target: /product
 
-  order:
-    ports:
-      - 5002:5000
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: $DATABASE_URL_ORDER
-    volumes:
-      - type: bind
-        source: ./order
-        target: /order
-
-  postgres:
-    image: postgres:13.2-alpine
-    build: ./postgres
-    container_name: postgres
-    restart: unless-stopped
-    ports:
-      - 5432:5432
-    environment:
-        POSTGRES_PASSWORD: "postgres"
-        POSTGRES_MULTIPLE_DATABASES: users, products, orders
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+#  order:
+#    ports:
+#      - 5002:5000
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    environment:
+#      DATABASE_URL: $DATABASE_URL_ORDER
+#    volumes:
+#      - type: bind
+#        source: ./order
+#        target: /order
 

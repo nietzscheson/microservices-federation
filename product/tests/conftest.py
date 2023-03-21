@@ -1,6 +1,5 @@
 import pytest
-from src.app import app as _app
-from src.models import db as _db, Product
+from src.app import app as _app, db as _db, Product
 from sqlalchemy import event
 
 
@@ -61,9 +60,10 @@ def client(app):
     return _
 
 @pytest.fixture()
-def add_product(app):
-    def _(name="T-Shirt", price=10.5, quantity=3, created_by=1):
-        product = Product(name=name, price=price, quantity=quantity, created_by=created_by)
-        product.save()
+def add_user(app):
+    def _(**kwargs):
+        product = Product(**kwargs)
+        _db.session.add(product)
+        _db.session.commit()
         return product
     return _
