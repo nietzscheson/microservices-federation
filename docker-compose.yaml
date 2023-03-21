@@ -13,6 +13,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    volumes:
+      - ./user:/user
+    ports:
+      - 5001:5000
 
   product:
     container_name: product
@@ -26,38 +30,28 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-#
-#  order:
-#    container_name: order
-#    build:
-#      context: ./order
-#      dockerfile: ./Dockerfile
-#      args:
-#        - NAME=order
-#    healthcheck:
-#      test: ["CMD-SHELL", "curl --fail http://order:5000/graphql || exit 1"]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
-#
-#  gateway:
-#    container_name: gateway
-#    depends_on:
-#      user:
-#        condition: service_healthy
-#      # product:
-#      #   condition: service_healthy
-#      # order:
-#      #   condition: service_healthy
-#    image: xmorse/apollo-federation-gateway
-#    ports:
-#      - "4000:80"
-#    environment:
-#      URL_0: "http://user:5000/graphql"
-#      # URL_1: "http://product:5000/graphql"
-#      # URL_2: "http://order:5000/graphql"
-#
-#
+    volumes:
+      - ./product:/product
+    ports:
+      - 5002:5000
+
+  order:
+    container_name: order
+    build:
+      context: ./order
+      dockerfile: ./Dockerfile
+      args:
+        - NAME=order
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://order:5000/graphql || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./order:/order
+    ports:
+      - 5003:5000
+
   gateway:
     container_name: gateway
     build:

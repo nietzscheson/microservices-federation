@@ -46,6 +46,7 @@ class Product(db.Model):
 @click.command(name='fixtures')
 @with_appcontext
 def fixtures():
+
     product_1 = Product(name="T-Shirt", created_by=1)
     product_2 = Product(name="Bag", created_by=1)
     product_3 = Product(name="Pants", created_by=1)
@@ -75,6 +76,14 @@ class ProductType:
     def created_by(self) -> typing.Optional[UserType]:
 
         return UserType(id=self.created_by)
+
+    @classmethod
+    def resolve_reference(cls, **representation) -> "ProductType":
+
+        id = strawberry.ID(representation["id"])
+        product = db.session.get(Product, id)
+
+        return cls(id=product.id, name=product.name)
 
 
 @strawberry.type(name="Product")

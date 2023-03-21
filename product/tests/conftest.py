@@ -60,7 +60,7 @@ def client(app):
     return _
 
 @pytest.fixture()
-def add_user(app):
+def add_product(app):
     def _(**kwargs):
         product = Product(**kwargs)
         _db.session.add(product)

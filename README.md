@@ -3,7 +3,7 @@ Microservices Federation Project
 
 This is a Docker (with docker-compose) environment for Microservices Federation Project.
 Is a example that how we can to federate multiples microservices using [Apollo Federation](https://www.apollographql.com/docs/federation/).
-Each schema in each microservice works independently. With Apollo Federation they work like a team.
+Each schema in each microservice works independently. With Apollo Federation they are combine into a single graph.
 
 ![Microservices Federation](./docs/microservices-federation.png?raw=true "Graph of Microservices Federation")
 
@@ -14,12 +14,7 @@ Each schema in each microservice works independently. With Apollo Federation the
 ```bash
 git clone https://github.com/nietzscheson/microservices-federation
 ```
-2. Copy the environment vars:
-
-```bash
-cp .env.dist .env
-```
-3. Init project
+2. Init project
 ```bash
 make
 ```
@@ -33,16 +28,15 @@ docker-compose ps
   Name                Command                  State               Ports
 ---------------------------------------------------------------------------------
 gateway    dumb-init -- npm start           Up             0.0.0.0:4000->80/tcp
-postgres   docker-entrypoint.sh postgres    Up (healthy)   0.0.0.0:5432->5432/tcp
-product    sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5001->5000/tcp
-user       sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5000->5000/tcp
+product    sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5002->5000/tcp
+user       sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5001->5000/tcp
 ```
 The microservices are running in:
 
 - APIGateway: [localhost:4000/graphql](http://localhost:4000/graphql)
-- User API: [localhost:5000/graphql](http://localhost:5000/graphql)
-- Product API: [localhost:5001/graphql](http://localhost:5001/graphql)
-- Order API: [localhost:5002/graphql](http://localhost:5002/graphql)
+- User API: [localhost:5000/graphql](http://localhost:5001/graphql)
+- Product API: [localhost:5001/graphql](http://localhost:5002/graphql)
+- Order API: [localhost:5002/graphql](http://localhost:5003/graphql)
 
 5. Run test:
 ```bash
