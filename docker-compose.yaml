@@ -4,8 +4,9 @@ services:
   user:
     container_name: user
     build:
-      context: ./user
+      context: ./services
       dockerfile: ./Dockerfile
+      target: user
       args:
         - NAME=user
     healthcheck:
@@ -14,15 +15,16 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./user:/user
+      - ./services/user:/services/user
     ports:
       - 5001:5000
 
   product:
     container_name: product
     build:
-      context: ./product
+      context: ./services
       dockerfile: ./Dockerfile
+      target: product
       args:
         - NAME=product
     healthcheck:
@@ -31,15 +33,16 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./product:/product
+      - ./services/product:/services/product
     ports:
       - 5002:5000
 
   order:
     container_name: order
     build:
-      context: ./order
+      context: ./services
       dockerfile: ./Dockerfile
+      target: order
       args:
         - NAME=order
     healthcheck:
@@ -48,7 +51,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./order:/order
+      - ./services/order:/services/order
     ports:
       - 5003:5000
 
