@@ -25,11 +25,12 @@ make ps
 This results in the following running containers:
 ```bash
 docker-compose ps
-  Name                Command                  State               Ports
----------------------------------------------------------------------------------
-gateway    dumb-init -- npm start           Up             0.0.0.0:4000->80/tcp
-product    sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5002->5000/tcp
-user       sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5001->5000/tcp
+ Name                Command                  State               Ports
+--------------------------------------------------------------------------------
+gateway   docker-entrypoint.sh /bin/ ...   Up             0.0.0.0:4000->80/tcp
+order     sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5003->5000/tcp
+product   sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5002->5000/tcp
+user      sh ./entrypoint.sh flask r ...   Up (healthy)   0.0.0.0:5001->5000/tcp
 ```
 The microservices are running in:
 
