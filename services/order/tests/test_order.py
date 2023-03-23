@@ -22,7 +22,7 @@ def test_order_create(client):
 
 def test_order(client, add_order):
 
-    user = add_order(name="###-0001", created_by=1, product_id=1)
+    user = add_order(name="###-0001", created_by=1, product=1)
 
     response = client(query={
         "query": """
@@ -33,7 +33,7 @@ def test_order(client, add_order):
                 createdBy{
                     id
                 }
-                productId{
+                product{
                     id
                 }
             }
@@ -49,4 +49,4 @@ def test_order(client, add_order):
     assert user["id"] == str(1)
     assert user["name"] == "###-0001"
     assert user["createdBy"]["id"] == str(1)
-    assert user["productId"]["id"] == str(1)
+    assert user["product"]["id"] == str(1)
