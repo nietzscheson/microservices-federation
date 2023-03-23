@@ -2,14 +2,17 @@ def test_product_create(client):
 
     response = client(query={
         "query": """
-        mutation ProductCreate($name: String!){
-            productCreate(name: $name){
+        mutation ProductCreate($name: String!, $createdBy: Int!){
+            productCreate(name: $name, createdBy: $createdBy){
                 id
                 name
+                createdBy {
+                    id
+                }
             }
         }
         """,
-        "variables": {"name": "T-Shirt"}}
+        "variables": {"name": "T-Shirt", "createdBy": 1}}
     )
 
     data = response.get_json()["data"]
@@ -18,6 +21,7 @@ def test_product_create(client):
 
     assert user["id"] == str(1)
     assert user["name"] == "T-Shirt"
+    assert user["createdBy"]["id"] == str(1)
 
 
 def test_product(client, add_product):

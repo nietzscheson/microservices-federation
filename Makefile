@@ -13,10 +13,13 @@ up: pull build
 	make ps
 ps:
 	docker-compose ps
-test:
-	docker-compose run --rm user python -m pytest tests/ -v -s
-	docker-compose run --rm product python -m pytest tests/ -v -s
-	docker-compose run --rm order python -m pytest tests/ -v -s
+test: test.user test.product test.order
+test.user:
+	@docker-compose run --rm user python -m pytest tests/ -v -s
+test.product:
+	@docker-compose run --rm product python -m pytest tests/ -v -s
+test.order:
+	@docker-compose run --rm order python -m pytest tests/ -v -s
 debug:
 	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build
 prune:
