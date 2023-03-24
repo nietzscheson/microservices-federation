@@ -67,7 +67,7 @@ class UserType:
     def resolve_reference(cls, id: strawberry.ID):
         return UserType(id)
 
-@strawberry.federation.type(keys=["id"], description="User Type definition")
+@strawberry.federation.type(keys=["id"], description="Product Type definition")
 class ProductType:
     id: strawberry.ID
     name: str

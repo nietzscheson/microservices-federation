@@ -35,23 +35,23 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     created_by = db.Column(db.Integer)
-    product_id = db.Column(db.Integer)
+    product = db.Column(db.Integer)
 
     def to_json(self):
         return {
             "id": self.id,
             "name": self.name,
             "created_by": self.created_by,
-            "product_id": self.product_id
+            "product": self.product
         }
 
 @click.command(name='fixtures')
 @with_appcontext
 def fixtures():
 
-    order_1 = Order(name="###-001", created_by=1, product_id=1)
-    order_2 = Order(name="###-002", created_by=2, product_id=2)
-    order_3 = Order(name="###-003", created_by=3, product_id=3)
+    order_1 = Order(name="###-001", created_by=1, product=1)
+    order_2 = Order(name="###-002", created_by=2, product=2)
+    order_3 = Order(name="###-003", created_by=3, product=3)
 
     db.session.add(order_1)
     db.session.add(order_2)
@@ -89,9 +89,9 @@ class OrderType:
         return UserType(id=self.created_by)
 
     @strawberry.field
-    def product_id(self) -> typing.Optional[ProductType]:
+    def product(self) -> typing.Optional[ProductType]:
 
-        return ProductType(id=self.product_id)
+        return ProductType(id=self.product)
 
 
 @strawberry.type(name="Order")
@@ -114,9 +114,9 @@ class Query:
 class Mutation:
 
     @strawberry.mutation
-    def order_create(self, name: str, created_by: typing.Optional[int] = None, product_id: typing.Optional[int] = None) -> OrderType:
+    def order_create(self, name: str, created_by: typing.Optional[int] = None, product: typing.Optional[int] = None) -> OrderType:
 
-        order = Order(name=name, created_by=created_by, product_id=product_id)
+        order = Order(name=name, created_by=created_by, product=product)
         db.session.add(order)
         db.session.commit()
 

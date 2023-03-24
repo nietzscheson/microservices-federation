@@ -14,15 +14,15 @@ def test_order_create(client):
 
     data = response.get_json()["data"]
 
-    user = data["orderCreate"]
+    order = data["orderCreate"]
 
-    assert user["id"] == str(1)
-    assert user["name"] == "###-0001"
+    assert order["id"] == str(1)
+    assert order["name"] == "###-0001"
 
 
 def test_order(client, add_order):
 
-    user = add_order(name="###-0001", created_by=1, product_id=1)
+    order = add_order(name="###-0001", created_by=1, product=1)
 
     response = client(query={
         "query": """
@@ -33,20 +33,20 @@ def test_order(client, add_order):
                 createdBy{
                     id
                 }
-                productId{
+                product{
                     id
                 }
             }
         }
         """,
-        "variables": {"id": user.id}}
+        "variables": {"id": order.id}}
     )
 
     data = response.get_json()["data"]
 
-    user = data["order"]
+    order = data["order"]
 
-    assert user["id"] == str(1)
-    assert user["name"] == "###-0001"
-    assert user["createdBy"]["id"] == str(1)
-    assert user["productId"]["id"] == str(1)
+    assert order["id"] == str(1)
+    assert order["name"] == "###-0001"
+    assert order["createdBy"]["id"] == str(1)
+    assert order["product"]["id"] == str(1)
