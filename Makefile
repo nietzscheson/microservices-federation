@@ -26,13 +26,19 @@ prune:
 	make down
 	docker volume prune -f
 	docker system prune -f
-upgrade:
-	docker-compose run --rm user flask db upgrade
-	docker-compose run --rm product flask db upgrade
-	docker-compose run --rm order flask db upgrade
-fixtures:
+upgrade: upgrade.user upgrade.product upgrade.order
+upgrade.user:
+	@docker-compose run --rm user flask db upgrade
+upgrade.product:
+	@docker-compose run --rm product flask db upgrade
+upgrade.order:
+	@docker-compose run --rm order flask db upgrade
+fixtures: fixtures.user fixtures.product fixtures.order
+fixtures.user:
 	@docker-compose run --rm user flask fixtures
+fixtures.product:
 	@docker-compose run --rm product flask fixtures
+fixtures.order:
 	@docker-compose run --rm order flask fixtures
 migrate:
 	docker-compose run --rm user flask db migrate

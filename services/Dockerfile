@@ -17,25 +17,28 @@ FROM base as user
 
 ARG NAME
 ENV NAME=$NAME
+ENV FLASK_APP=/services/user/src/app.py
 
 WORKDIR /services/user
 
-CMD flask --app src/app.py run --host 0.0.0.0
+CMD flask run --host 0.0.0.0
 
 FROM base as product
 
 ARG NAME
 ENV NAME=$NAME
+ENV FLASK_APP=/services/product/src/app.py
 
 WORKDIR /services/product
 
-CMD flask --app src/app.py run --host 0.0.0.0
+CMD flask run --host 0.0.0.0
 
 FROM base as order
 
 ARG NAME
 ENV NAME=$NAME
+ENV FLASK_APP=/services/order/src/app.py
 
 WORKDIR /services/order
 
-CMD flask --app src/app.py run --host 0.0.0.0
+CMD flask run --host 0.0.0.0

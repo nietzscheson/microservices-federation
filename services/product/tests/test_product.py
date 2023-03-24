@@ -17,11 +17,11 @@ def test_product_create(client):
 
     data = response.get_json()["data"]
 
-    user = data["productCreate"]
+    product = data["productCreate"]
 
-    assert user["id"] == str(1)
-    assert user["name"] == "T-Shirt"
-    assert user["createdBy"]["id"] == str(1)
+    assert product["id"] == str(1)
+    assert product["name"] == "T-Shirt"
+    assert product["createdBy"]["id"] == str(1)
 
 
 def test_product(client, add_product):
@@ -45,11 +45,11 @@ def test_product(client, add_product):
 
     data = response.get_json()["data"]
 
-    user = data["product"]
+    product = data["product"]
 
-    assert user["id"] == str(1)
-    assert user["name"] == "Pants"
-    assert user["createdBy"]["id"] == str(1)
+    assert product["id"] == str(1)
+    assert product["name"] == "Pants"
+    assert product["createdBy"]["id"] == str(1)
 
 def test_product_representation(client, add_product):
 
@@ -70,7 +70,7 @@ def test_product_representation(client, add_product):
 
     data = response.get_json()["data"]
 
-    user = data["_entities"]
+    product = data["_entities"]
 
-    assert user[0]["id"] == str(1)
-    assert user[0]["name"] == "Pants"
+    assert product[0]["id"] == str(1)
+    assert product[0]["name"] == "Pants"
