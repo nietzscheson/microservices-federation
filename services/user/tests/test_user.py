@@ -12,7 +12,7 @@ def test_user_create(client):
         "variables": {"name": "Isabella"}}
     )
 
-    data = response.get_json()["data"]
+    data = response.json()["data"]
 
     user = data["userCreate"]
 
@@ -36,7 +36,7 @@ def test_user(client, add_user):
         "variables": {"id": user.id}}
     )
 
-    data = response.get_json()["data"]
+    data = response.json()["data"]
 
     user = data["user"]
 
@@ -60,9 +60,33 @@ def test_user_representation(client, add_user):
         "variables": {"id": user.id}}
     )
 
-    data = response.get_json()["data"]
+    data = response.json()["data"]
 
     user = data["_entities"]
 
     assert user[0]["id"] == str(1)
     assert user[0]["name"] == "Isabella"
+
+def test_users(client, add_user):
+
+    add_user(name="Isabella")
+    add_user(name="Fernando")
+
+    response = client(query={
+        "query": """
+        query Users{
+            users{
+                id
+                name
+            }
+        }
+        """}
+    )
+
+    data = response.json()["data"]
+
+    users = data["users"]
+
+    assert len(users) == 2
+    assert users[0]["name"] == "Isabella"
+    assert users[1]["name"] == "Fernando"

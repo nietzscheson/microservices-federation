@@ -1,44 +1,50 @@
-FROM python:3.11 as base
+FROM python:3.13 AS base
 
-ENV FLASK_DEBUG=true
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONFAULTHANDLER 1
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONFAULTHANDLER=1
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONPATH=.
 
-WORKDIR /services
-
-COPY requirements.txt ./
-
-RUN pip install -r requirements.txt
-
-FROM base as user
+FROM base AS user
 
 ARG NAME
 ENV NAME=$NAME
-ENV FLASK_APP=/services/user/src/app.py
 
 WORKDIR /services/user
 
-CMD flask run --host 0.0.0.0
+COPY user/pyproject.toml ./
 
-FROM base as product
+RUN uv sync --no-install-project
+
+CMD ["uv", "run", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "5000"]
+
+FROM base AS product
 
 ARG NAME
 ENV NAME=$NAME
-ENV FLASK_APP=/services/product/src/app.py
 
 WORKDIR /services/product
 
-CMD flask run --host 0.0.0.0
+COPY product/pyproject.toml ./
 
-FROM base as order
+RUN uv sync --no-install-project
+
+CMD ["uv", "run", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "5000"]
+
+FROM base AS order
 
 ARG NAME
 ENV NAME=$NAME
-ENV FLASK_APP=/services/order/src/app.py
 
 WORKDIR /services/order
 
-CMD flask run --host 0.0.0.0
+COPY order/pyproject.toml ./
+
+RUN uv sync --no-install-project
+
+CMD ["uv", "run", "uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "5000"]

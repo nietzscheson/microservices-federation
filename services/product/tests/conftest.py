@@ -1,42 +1,55 @@
+import subprocess
 import pytest
-from src.app import app as _app, db as _db, Product
-from sqlalchemy import event
+from fastapi.testclient import TestClient
+from sqlalchemy import text
+from src.database import Base
+from src.app import app, Product
+from src.containers import MainContainer
 
 
-@pytest.fixture(scope="session")
-def app():
-    _app.testing = True
+@pytest.fixture
+def main_container():
 
-    return _app
+    container = MainContainer()
+
+    return container
 
 
-@pytest.fixture(scope="function", autouse=True)
-def database_clean(app):
-    """
-    Returns session-wide initialised database.
-    """
-    with app.app_context():
-        for table in reversed(_db.metadata.sorted_tables):
-            _db.session.execute(table.delete())
-        _db.session.commit()
+@pytest.fixture(scope="session", autouse=True)
+def apply_migrations():
+    subprocess.run(["uv", "run", "alembic", "upgrade", "head"])
+    yield
 
-        yield _db
 
-        _db.session.remove()
+@pytest.fixture(autouse=True)
+def db(main_container, apply_migrations):
+    session_factory = main_container.session()
+
+    with session_factory() as session:
+        for table in reversed(Base.metadata.sorted_tables):
+            session.execute(text(f'TRUNCATE TABLE "{table.name}" RESTART IDENTITY CASCADE'))
+        session.commit()
+
+        yield session
+
+        session.rollback()
 
 
 @pytest.fixture()
-def client(app):
+def client():
+    test_client = TestClient(app)
+
     def _(query={}):
-        client = app.test_client()
-        return client.post("/graphql", json=query)
+        return test_client.post("/graphql", json=query)
     return _
 
+
 @pytest.fixture()
-def add_product(app):
+def add_product(db):
     def _(**kwargs):
         product = Product(**kwargs)
-        _db.session.add(product)
-        _db.session.commit()
+        db.add(product)
+        db.commit()
+        db.refresh(product)
         return product
     return _

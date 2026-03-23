@@ -1,4 +1,5 @@
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer } = require("@apollo/server");
+const { startStandaloneServer } = require("@apollo/server/standalone");
 const { ApolloGateway, IntrospectAndCompose } = require("@apollo/gateway");
 
 const gateway = new ApolloGateway({
@@ -11,14 +12,14 @@ const gateway = new ApolloGateway({
     }),
 });
 
-const cors = {
-    "origin": "*",
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-    "preflightContinue": false,
-    "optionsSuccessStatus": 204
-}
-const server = new ApolloServer({ cors, gateway });
+const server = new ApolloServer({
+    gateway,
+    plugins: [],
+});
 
-server.listen(80).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+startStandaloneServer(server, {
+    listen: { port: 80 },
+    context: async ({ req }) => ({ req }),
+}).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`);
 });

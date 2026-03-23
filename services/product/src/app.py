@@ -1,63 +1,22 @@
-import os
 import typing
 import strawberry
-from flask import Flask
-# from src.models import db, User
-from flask_migrate import Migrate
-from strawberry.flask.views import GraphQLView
-import click
-from flask.cli import with_appcontext
-import logging
+from fastapi import FastAPI
+from strawberry.fastapi import GraphQLRouter
+from sqlalchemy import Column, Integer, String
 
-logger = logging.getLogger(__name__)
+from src.database import Base
+from src.containers import MainContainer
 
-app = Flask(__name__)
+container = MainContainer()
+Session = container.session()
 
-basedir = os.path.abspath(os.path.dirname(__file__))
 
-class Config(object):
-    DEVELOPMENT = True
-    DEBUG = True
-    SECRET_KEY = 'this-really-needs-to-be-changed'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+class Product(Base):
+    __tablename__ = "product"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(128))
+    created_by = Column(Integer)
 
-app.config.from_object(Config)
-
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
-db.init_app(app)
-migrate = Migrate(app, db)
-
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
-    created_by = db.Column(db.Integer)
-
-    def to_json(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "created_by": self.created_by
-        }
-
-@click.command(name='fixtures')
-@with_appcontext
-def fixtures():
-
-    product_1 = Product(name="T-Shirt", created_by=1)
-    product_2 = Product(name="Bag", created_by=1)
-    product_3 = Product(name="Pants", created_by=1)
-
-    db.session.add(product_1)
-    db.session.add(product_2)
-    db.session.add(product_3)
-
-    db.session.commit()
-
-app.cli.add_command(fixtures)
 
 @strawberry.federation.type(keys=["id"])
 class UserType:
@@ -67,56 +26,58 @@ class UserType:
     def resolve_reference(cls, id: strawberry.ID):
         return UserType(id)
 
+
 @strawberry.federation.type(keys=["id"], description="Product Type definition")
 class ProductType:
     id: strawberry.ID
     name: str
+    _created_by: strawberry.Private[typing.Optional[int]] = None
 
     @strawberry.field
     def created_by(self) -> typing.Optional[UserType]:
-
-        return UserType(id=self.created_by)
+        if self._created_by is not None:
+            return UserType(id=self._created_by)
+        return None
 
     @classmethod
     def resolve_reference(cls, **representation) -> "ProductType":
-
-        id = strawberry.ID(representation["id"])
-        product = db.session.get(Product, id)
-
-        return cls(id=product.id, name=product.name)
+        with Session() as session:
+            id = strawberry.ID(representation["id"])
+            product = session.get(Product, id)
+            return cls(id=product.id, name=product.name, _created_by=product.created_by)
 
 
 @strawberry.type(name="Product")
 class Query:
     @strawberry.field
     def product(self, info: strawberry.types.Info, id: strawberry.ID) -> ProductType:
-
-        product = db.session.get(Product, id)
-
-        if product:
-            return product
-        raise Exception("The Product %s doesn't exists" % id)
+        with Session() as session:
+            product = session.get(Product, id)
+            if product:
+                return ProductType(id=product.id, name=product.name, _created_by=product.created_by)
+            raise Exception("The Product %s doesn't exists" % id)
 
     @strawberry.field
     def products(self, info: strawberry.types.Info, page: int = 1, perPage: int = 10, sortField: str = "name", sortOrder: str = "ASC") -> typing.List[ProductType]:
+        with Session() as session:
+            return [ProductType(id=p.id, name=p.name, _created_by=p.created_by) for p in session.query(Product).all()]
 
-        return db.session.query(Product).all()
 
 @strawberry.type
 class Mutation:
 
     @strawberry.mutation
     def product_create(self, name: str, created_by: typing.Optional[int] = None) -> ProductType:
+        with Session() as session:
+            product = Product(name=name, created_by=created_by)
+            session.add(product)
+            session.commit()
+            return ProductType(id=product.id, name=product.name, _created_by=product.created_by)
 
-        product = Product(name=name, created_by=created_by)
-        db.session.add(product)
-        db.session.commit()
-
-        return product
 
 schema = strawberry.federation.Schema(query=Query, mutation=Mutation, enable_federation_2=True)
 
-app.add_url_rule(
-    "/graphql",
-    view_func=GraphQLView.as_view("graphql_view", schema=schema),
-)
+graphql_app = GraphQLRouter(schema)
+
+app = FastAPI()
+app.include_router(graphql_app, prefix="/graphql")
