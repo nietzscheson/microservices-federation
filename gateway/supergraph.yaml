@@ -1,0 +1,14 @@
+federation_version: =2.9.0
+subgraphs:
+  users:
+    routing_url: http://user:5000/graphql
+    schema:
+      subgraph_url: http://user:5000/graphql
+  products:
+    routing_url: http://product:5000/graphql
+    schema:
+      subgraph_url: http://product:5000/graphql
+  orders:
+    routing_url: http://order:5000/graphql
+    schema:
+      subgraph_url: http://order:5000/graphql

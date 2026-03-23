@@ -15,7 +15,7 @@ def test_product_create(client):
         "variables": {"name": "T-Shirt", "createdBy": 1}}
     )
 
-    data = response.get_json()["data"]
+    data = response.json()["data"]
 
     product = data["productCreate"]
 
@@ -43,7 +43,7 @@ def test_product(client, add_product):
         "variables": {"id": product.id}}
     )
 
-    data = response.get_json()["data"]
+    data = response.json()["data"]
 
     product = data["product"]
 
@@ -68,9 +68,36 @@ def test_product_representation(client, add_product):
         "variables": {"id": product.id}}
     )
 
-    data = response.get_json()["data"]
+    data = response.json()["data"]
 
     product = data["_entities"]
 
     assert product[0]["id"] == str(1)
     assert product[0]["name"] == "Pants"
+
+def test_products(client, add_product):
+
+    add_product(name="T-Shirt", created_by=1)
+    add_product(name="Pants", created_by=1)
+
+    response = client(query={
+        "query": """
+        query Products{
+            products{
+                id
+                name
+                createdBy{
+                    id
+                }
+            }
+        }
+        """}
+    )
+
+    data = response.json()["data"]
+
+    products = data["products"]
+
+    assert len(products) == 2
+    assert products[0]["name"] == "T-Shirt"
+    assert products[1]["name"] == "Pants"

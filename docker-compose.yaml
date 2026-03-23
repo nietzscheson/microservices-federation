@@ -1,6 +1,20 @@
-version: "3.9"
-
 services:
+  postgres:
+    image: postgres:17.4
+    container_name: postgres
+    ports:
+      - "6543:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: users,products,orders
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./docker/postgres/multiple-databases.sh:/docker-entrypoint-initdb.d/multiple-databases.sh
+
   user:
     container_name: user
     build:
@@ -9,6 +23,8 @@ services:
       target: user
       args:
         - NAME=user
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/users
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://user:5000/graphql || exit 1"]
       interval: 5s
@@ -18,6 +34,9 @@ services:
       - ./services/user:/services/user
     ports:
       - 5001:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   product:
     container_name: product
@@ -27,6 +46,8 @@ services:
       target: product
       args:
         - NAME=product
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/products
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://product:5000/graphql || exit 1"]
       interval: 5s
@@ -36,6 +57,9 @@ services:
       - ./services/product:/services/product
     ports:
       - 5002:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   order:
     container_name: order
@@ -45,6 +69,8 @@ services:
       target: order
       args:
         - NAME=order
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/orders
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://order:5000/graphql || exit 1"]
       interval: 5s
@@ -54,20 +80,21 @@ services:
       - ./services/order:/services/order
     ports:
       - 5003:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   gateway:
     container_name: gateway
     build:
       context: ./gateway
       dockerfile: ./Dockerfile
-    volumes:
-      - ./gateway:/app:rw,cached
-      - gateway_modules:/app/node_modules
     ports:
-      - "4000:80"
+      - "4000:4000"
     depends_on:
       user:
         condition: service_healthy
-
-volumes:
-  gateway_modules: ~
+      product:
+        condition: service_healthy
+      order:
+        condition: service_healthy
